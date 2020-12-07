@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -54,8 +53,9 @@ func main() {
 	}
 
 	// Print all files and folders currently being watched
+	log.Println("-- Watched files")
 	for path, f := range w.WatchedFiles() {
-		fmt.Printf("%s: %s\n", path, f.Name())
+		log.Printf("%s: %s\n", path, f.Name())
 	}
 
 	// Start watching the provided files and folders
@@ -77,7 +77,11 @@ func readWSFile(path string) error {
 		return err
 	}
 
-	log.Println(b)
+	// Read file
+	// Unmarshal file content
+	// Write dato into a database table
+	log.Println("Received file content: ")
+	log.Println(string(b))
 
 	return nil
 }
