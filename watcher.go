@@ -1,4 +1,4 @@
-package main
+package dmawatcher
 
 import (
 	"io/ioutil"
@@ -14,7 +14,12 @@ const (
 	pollingDurationMs = 1000
 )
 
-func main() {
+func StartWatcher() {
+	c, err := getConf()
+	if err != nil {
+		log.Fatalf("get conf: %s", err)
+	}
+
 	w := watcher.New()
 
 	// SetMaxEvents to 1 to allow at most 1 event's to be received
@@ -27,7 +32,7 @@ func main() {
 	w.FilterOps(watcher.Create)
 
 	// Only notify for json files
-	r := regexp.MustCompile("[a-z0-9-_.]+.json$")
+	r := regexp.MustCompile(c.Watcher.RegexFilterHook)
 	w.AddFilterHook(watcher.RegexFilterHook(r, false))
 
 	go func() {
@@ -48,7 +53,7 @@ func main() {
 	}()
 
 	// Watch test folder recursively for changes
-	if err := w.AddRecursive("./test_folder"); err != nil {
+	if err := w.AddRecursive(c.Watcher.Path); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -77,6 +82,7 @@ func readWSFile(path string) error {
 		return err
 	}
 
+	// TODO
 	// Read file
 	// Unmarshal file content
 	// Write dato into a database table

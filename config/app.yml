@@ -1,0 +1,3 @@
+watcher:
+  path: "test_folder"
+  regexFilterHook: "[a-z0-9-_.]+.json$"
