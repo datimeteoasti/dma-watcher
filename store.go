@@ -21,6 +21,7 @@ func NewWeatherDataStore() (*WeatherDataStore, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close(context.Background())
 
 	return &WeatherDataStore{
 		metebridge: &models.MeteoBridgeModel{DB: db},

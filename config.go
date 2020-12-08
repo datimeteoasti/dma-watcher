@@ -17,7 +17,6 @@ type WatcherConfig struct {
 }
 
 func getConf() (*AppConfig, error) {
-	log.Println("Reading configuration file...")
 	var c *AppConfig
 	yamlFile, err := ioutil.ReadFile("config/app.yml")
 	if err != nil {

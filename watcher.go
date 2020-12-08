@@ -1,6 +1,7 @@
 package dmawatcher
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"time"
 
 	"github.com/radovskyb/watcher"
+	"github.com/trampfox/dma-watcher/models"
 )
 
 const (
@@ -15,9 +17,15 @@ const (
 )
 
 func StartWatcher() {
+	log.Println("Reading configuration file...")
 	c, err := getConf()
 	if err != nil {
 		log.Fatalf("get conf: %s", err)
+	}
+
+	weatherDataStore, err := NewWeatherDataStore()
+	if err != nil {
+		log.Fatalf("init weather data store: %s", err)
 	}
 
 	w := watcher.New()
@@ -39,7 +47,7 @@ func StartWatcher() {
 		for {
 			select {
 			case event := <-w.Event:
-				err := readWSFile(event.Path)
+				err := readWSFile(event.Path, weatherDataStore)
 				if err != nil {
 					log.Println(err)
 				}
@@ -72,7 +80,7 @@ func StartWatcher() {
 }
 
 // readWSFile read the content of the file uploaded by the weather station
-func readWSFile(path string) error {
+func readWSFile(path string, store *WeatherDataStore) error {
 	file, err := os.Open(path)
 	if err != nil {
 		return err
@@ -85,7 +93,8 @@ func readWSFile(path string) error {
 	// TODO
 	// Read file
 	// Unmarshal file content
-	// Write dato into a database table
+	testData := map[string]interface{}{"a": 10}
+	store.metebridge.Add(models.MeteoBridge{Info: testData})
 	log.Println("Received file content: ")
 	log.Println(string(b))
 

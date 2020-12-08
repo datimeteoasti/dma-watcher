@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/jackc/pgx/v4"
@@ -13,7 +14,7 @@ type MeteoBridgeModel struct {
 
 // MeteoBridge model holds data from meteobridge weather stations
 type MeteoBridge struct {
-	Foo string
+	Info map[string]interface{}	// JSONB field
 }
 
 func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
@@ -29,7 +30,7 @@ func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
 	for rows.Next() {
 		var item MeteoBridge
 
-		if err = rows.Scan(&item.Foo); err != nil {
+		if err = rows.Scan(&item.Info); err != nil {
 			return nil, err
 		}
 
@@ -45,8 +46,9 @@ func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
 
 func (m *MeteoBridgeModel) Add(item MeteoBridge) error {
 	// TODO add timeout
-	_, err := m.DB.Query(context.Background(),
-		fmt.Sprintf("INSERT INTO meteobridgedata (foo) VALUES ('%s')", item.Foo))
+	infoJson, err := json.Marshal(item.Info)
+	_, err = m.DB.Exec(context.Background(),
+		"INSERT INTO meteobridgedata (foo) VALUES ('%s')", infoJson)
 	if err != nil {
 		return err
 	}
