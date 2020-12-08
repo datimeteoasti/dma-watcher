@@ -1,7 +1,6 @@
 package dmawatcher
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"gopkg.in/yaml.v2"
@@ -12,8 +11,8 @@ type AppConfig struct {
 }
 
 type WatcherConfig struct {
-	Path              string `yaml:"path"`
-	RegexFilterHook   string `yaml:"regexFilterHook"`
+	Path            string `yaml:"path"`
+	RegexFilterHook string `yaml:"regexFilterHook"`
 }
 
 func getConf() (*AppConfig, error) {

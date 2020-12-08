@@ -16,7 +16,7 @@ test_folder
 # vendor/
 
 # bin
-cmd/dma-watcher/dma-watcher
+build
 
 .DS_Store
 TODO

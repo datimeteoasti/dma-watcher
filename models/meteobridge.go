@@ -44,8 +44,8 @@ func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
 }
 
 func (m *MeteoBridgeModel) Add(item MeteoBridge) error {
-	// TODO add timeout 
-	_, err := m.DB.Query(context.Background(), 
+	// TODO add timeout
+	_, err := m.DB.Query(context.Background(),
 		fmt.Sprintf("INSERT INTO meteobridgedata (foo) VALUES ('%s')", item.Foo))
 	if err != nil {
 		return err
