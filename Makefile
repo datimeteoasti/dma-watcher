@@ -7,6 +7,9 @@ clean: go-clean
 .PHONY: test
 test: go-test
 
+.PHONY: test
+run-local: go-run-local
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -35,5 +38,8 @@ go-clean-test-cache:
 go-test:
 	@echo "Running tests..."
 	go test -v
+
+go-run-local:
+	go run cmd/dma-watcher/main.go
 
 .DEFAULT_GOAL := help

@@ -28,7 +28,5 @@ func getConf() (*AppConfig, error) {
 		return nil, err
 	}
 
-	fmt.Println(c)
-
 	return c, nil
 }
