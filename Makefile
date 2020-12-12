@@ -7,8 +7,11 @@ clean: go-clean
 .PHONY: test
 test: go-test
 
-.PHONY: test
+.PHONY: run-local
 run-local: go-run-local
+
+.PHONY: start-db
+start-db: docker-compose-start-db
 
 .PHONY: help
 help:
@@ -41,5 +44,9 @@ go-test:
 
 go-run-local:
 	go run cmd/dma-watcher/main.go
+
+docker-compose-start-db:
+	@echo "Starting local DB instance..."
+	docker-compose -f docker-compose.yml start db
 
 .DEFAULT_GOAL := help
