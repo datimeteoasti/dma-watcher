@@ -8,7 +8,7 @@ make build
 
 ## Configure
 
-Before running this project on your local development environment, you need to configure the credentials that dma-watcher uses to connect to the database.
+Before running this project on your local development environment, you need to configure the credentials that `dma-watcher` uses to connect to the database.
 
 `dma-watcher` reads the connection string from the environment variable `DATABASE_URL`, so you need to export it in the following way
 
