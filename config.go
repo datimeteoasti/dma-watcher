@@ -2,7 +2,6 @@ package dmawatcher
 
 import (
 	"io/ioutil"
-	"log"
 
 	"gopkg.in/yaml.v2"
 )

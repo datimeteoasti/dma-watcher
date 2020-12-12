@@ -1,7 +1,6 @@
 package dmawatcher
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -94,7 +93,8 @@ func readWSFile(path string, store *WeatherDataStore) error {
 	// Read file
 	// Unmarshal file content
 	testData := map[string]interface{}{"a": 10}
-	store.metebridge.Add(models.MeteoBridge{Info: testData})
+	_ = store.metebridge.Add(models.MeteoBridge{Info: testData})
+
 	log.Println("Received file content: ")
 	log.Println(string(b))
 

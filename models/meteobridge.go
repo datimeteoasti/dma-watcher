@@ -3,23 +3,23 @@ package models
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"log"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type MeteoBridgeModel struct {
-	DB *pgx.Conn
+	ConnPool *pgxpool.Pool
 }
 
 // MeteoBridge model holds data from meteobridge weather stations
 type MeteoBridge struct {
-	Info map[string]interface{}	// JSONB field
+	Info map[string]interface{} // JSONB field
 }
 
 func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
 	// TODO add timeout
-	rows, err := m.DB.Query(context.Background(), "SELECT * FROM meteobridgedata")
+	rows, err := m.ConnPool.Query(context.Background(), "SELECT * FROM meteobridgedata")
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +45,14 @@ func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
 }
 
 func (m *MeteoBridgeModel) Add(item MeteoBridge) error {
-	// TODO add timeout
 	infoJson, err := json.Marshal(item.Info)
-	_, err = m.DB.Exec(context.Background(),
-		"INSERT INTO meteobridgedata (foo) VALUES ('%s')", infoJson)
+	if err != nil {
+		return err
+	}
+
+	log.Println("Creating a new record in the meteobridgedata table...")
+	_, err = m.ConnPool.Exec(context.Background(),
+		"INSERT INTO meteobridgedata (info) VALUES ($1)", &infoJson)
 	if err != nil {
 		return err
 	}

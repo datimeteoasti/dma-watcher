@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/trampfox/dma-watcher/models"
 )
 
@@ -17,13 +17,12 @@ type WeatherDataStore struct {
 
 func NewWeatherDataStore() (*WeatherDataStore, error) {
 	log.Println("Trying to connect to database instance...")
-	db, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	pool, err := pgxpool.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close(context.Background())
 
 	return &WeatherDataStore{
-		metebridge: &models.MeteoBridgeModel{DB: db},
+		metebridge: &models.MeteoBridgeModel{ConnPool: pool},
 	}, nil
 }
