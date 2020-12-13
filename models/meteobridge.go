@@ -5,11 +5,19 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 )
 
+type DBConn interface {
+	Begin(ctx context.Context) (pgx.Tx, error)
+	Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error)
+	Query(ctx context.Context, sql string, optionsAndArgs ...interface{}) (pgx.Rows, error)
+	QueryRow(ctx context.Context, sql string, optionsAndArgs ...interface{}) pgx.Row
+}
+
 type MeteoBridgeModel struct {
-	ConnPool *pgxpool.Pool
+	ConnPool DBConn
 }
 
 // MeteoBridge model holds data from meteobridge weather stations
@@ -18,7 +26,6 @@ type MeteoBridge struct {
 }
 
 func (m *MeteoBridgeModel) All() ([]MeteoBridge, error) {
-	// TODO add timeout
 	rows, err := m.ConnPool.Query(context.Background(), "SELECT * FROM meteobridgedata")
 	if err != nil {
 		return nil, err
